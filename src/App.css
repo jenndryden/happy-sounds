@@ -1,0 +1,131 @@
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-image: url('background2.png');
+  background-size: cover;
+  margin: -8px;
+}
+
+.logo {
+  width: 400px;
+  height: 250px;
+  margin-top: 20px;
+}
+
+.audiologo {
+  width: 260px;
+  height: 50px;
+}
+
+.name {
+  width: 100px;
+  height: 70px;
+  position: absolute; 
+  bottom: 20px; 
+  right: 20px;
+}
+
+.circle {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.slider {
+  position: absolute;
+  text-align: center;
+  transform-origin: 50% 100%;
+}
+
+.slider input {
+  width: 150px;
+}
+
+/* span {
+  margin-top: 8px;
+} */
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: none;
+  height: 30px;
+  width: 30px;
+  background-color: transparent;
+  background-image: url('thumbs-sprite.png');
+  background-position: 0 0;
+  background-size: cover;
+  transform: scale(1.9);
+  cursor: pointer;
+}
+
+input[type="range"]:active::-webkit-slider-thumb {
+  background-position: 100% 0;
+}
+
+.sprite-button {
+  /* Set the size of your button */
+  width: 200px;
+  height: 200px;
+
+  /* Use your sprite as a background */
+  background: url('playme.png') no-repeat;
+
+  /* Set the initial background position */
+  background-position: 0 0;
+
+  /* Set cursor to pointer to indicate it's clickable */
+  cursor: pointer;
+}
+
+.sprite-button:hover {
+  /* Change background position on hover to display the second image in the sprite */
+  background-position: -201px 0;
+}
+
+ @media (max-width: 1200px) {
+.container {
+  display: flex;
+  justify-content: center;
+  min-height: 200vh;
+  background-image: url('backgroundsmaller.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+} 
+
+.jenn-logo {
+  /* Set the size of your button */
+  width: 100px;  /* adjust to desired width */
+  height: 100px; /* adjust to desired height */
+
+  /* Use your sprite as a background */
+  background: url('jennlogo.png') no-repeat;
+
+  /* Set the initial background position */
+  background-position: 0 0;
+  background-size: cover;
+
+  /* Set cursor to pointer to indicate it's clickable */
+  cursor: pointer;
+  position: absolute;
+  position: absolute;
+right: 20px;
+bottom: 0px;
+
+}
+
+.jenn-logo:hover {
+  /* Change background position on hover to display the second image in the sprite */
+  background-position: -101px 0;
+}
+
