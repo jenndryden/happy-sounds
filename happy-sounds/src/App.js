@@ -24,6 +24,7 @@ const sliderStyle = {
   maxWidth: '500px',
   outline: 'none',
   borderRadius: '25px',
+  opacity: '0.9',
 };
 
 const AudioSliderApp = () => {
@@ -60,7 +61,7 @@ const startAudio = () => {
   return (
     <div className="container">
       <img src={logo} alt="Logo" className="logo" />
-      <img src={name} alt="Jenn" className="name" />
+      <div className="jenn-logo" onClick={() => window.open("http://www.jenndryden.com", "_blank")}></div>
       <div className="circle">
       {!isStarted && <div className="sprite-button" onClick={startAudio}>
   </div>}

@@ -108,3 +108,30 @@ input[type="range"]:active::-webkit-slider-thumb {
     transform: none;
   }
 }
+
+.jenn-logo {
+  /* Set the size of your button */
+  width: 100px;  /* adjust to desired width */
+  height: 100px; /* adjust to desired height */
+
+  /* Use your sprite as a background */
+  background: url('jennlogo.png') no-repeat;
+
+  /* Set the initial background position */
+  background-position: 0 0;
+  background-size: cover;
+
+  /* Set cursor to pointer to indicate it's clickable */
+  cursor: pointer;
+  position: absolute;
+  position: absolute;
+right: 20px;
+bottom: 0px;
+
+}
+
+.jenn-logo:hover {
+  /* Change background position on hover to display the second image in the sprite */
+  background-position: -101px 0;
+}
+
