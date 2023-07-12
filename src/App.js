@@ -36,18 +36,18 @@ const AudioSliderApp = () => {
   }, []);
   const [volumes, setVolumes] = useState({});
   const [audioFiles, setAudioFiles] = useState([
-    { id: 1, volume: 0, src: rain, imgSrc: rainlogo },
-    { id: 2, volume: 0, src: brownnoise, imgSrc: brownnoiselogo },
-    { id: 3, volume: 0, src: laughter, imgSrc: laughterlogo},
-    { id: 4, volume: 0, src: waves, imgSrc: waveslogo },
-    { id: 5, volume: 0, src: bonfire, imgSrc: bonfirelogo },
-    { id: 6, volume: 0, src: leaves, imgSrc: leaveslogo },
+    { id: 1, volume: 0, src: rain, imgSrc: rainlogo, isPlaying: false },
+    { id: 2, volume: 0, src: brownnoise, imgSrc: brownnoiselogo, isPlaying: false },
+    { id: 3, volume: 0, src: laughter, imgSrc: laughterlogo, isPlaying: false},
+    { id: 4, volume: 0, src: waves, imgSrc: waveslogo, isPlaying: false },
+    { id: 5, volume: 0, src: bonfire, imgSrc: bonfirelogo, isPlaying: false },
+    { id: 6, volume: 0, src: leaves, imgSrc: leaveslogo, isPlaying: false },
   ]);
 
   const handleSliderChange = (id, volume) => {
     setAudioFiles((prevAudioFiles) =>
       prevAudioFiles.map((audioFile) =>
-      audioFile.id === id ? { ...audioFile, volume } : audioFile
+        audioFile.id === id ? { ...audioFile, volume, isPlaying: isStarted ? true : audioFile.isPlaying } : audioFile
       )
     );
     setVolumes((prevVolumes) => ({
@@ -62,6 +62,12 @@ const AudioSliderApp = () => {
 
 const startAudio = () => {
     setIsStarted(true);
+    setAudioFiles(files => 
+      files.map(file => ({
+        ...file,
+        isPlaying: true,
+      }))
+    );
 };
 
 useEffect(() => {
@@ -126,7 +132,7 @@ useEffect(() => {
                 <AudioPlayer
                   src={audioFile.src}
                   volume={volume / 100}
-                  autoPlay
+                  autoPlay={audioFile.isPlaying}
                   loop={true}
                   controls={false}
                 />
