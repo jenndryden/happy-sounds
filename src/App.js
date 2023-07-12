@@ -16,6 +16,7 @@ import leaveslogo from './audionames/leaves.png';
 import waveslogo from './audionames/waves.png';
 import brownnoiselogo from './audionames/brownnoise.png';
 import bonfirelogo from './audionames/bonfire.png';
+import ReactGA from 'react-ga';
 
 const sliderStyle = {
   WebkitAppearance: 'none',
@@ -29,6 +30,10 @@ const sliderStyle = {
 };
 
 const AudioSliderApp = () => {
+  useEffect(() => {
+    ReactGA.initialize('G-SQGQ56KHNZ'); // Your Google Analytics tracking ID
+    ReactGA.pageview(window.location.pathname + window.location.search);
+  }, []);
   const [volumes, setVolumes] = useState({});
   const [audioFiles, setAudioFiles] = useState([
     { id: 1, volume: 0, src: rain, imgSrc: rainlogo },
