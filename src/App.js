@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import './App.css';
 import logo from './logo.png';
 import logomobile from './logomobile.png';
@@ -29,11 +29,70 @@ const sliderStyle = {
   opacity: '0.9',
 };
 
+const AudioSliderItem = ({ audioFile, handleSliderChange, volume, isMobile, index, audioFilesLength }) => {
+  const playerRef = useRef();
+
+  useEffect(() => {
+    if (audioFile.isPlaying) {
+      playerRef.current.audioEl.current.play();
+    } else {
+      playerRef.current.audioEl.current.pause();
+    }
+  }, [audioFile.isPlaying]);
+
+  let positionX = 0;
+  let positionY = 0;
+
+  if (isMobile) {
+    positionY = index * 100; 
+  } else {
+    const angle = (index * 360) / audioFilesLength;
+    if (index === 0 || index === 5 || index === 1) {
+      positionX = 200 * Math.cos((angle * Math.PI) / 180) + 250;
+      positionY = 150 * Math.sin((angle * Math.PI) / 180);
+    } else {
+      positionX = 200 * Math.cos((angle * Math.PI) / 180) - 250;
+      positionY = 150 * Math.sin((angle * Math.PI) / 180);
+    }
+  }
+
+  const transform = `translate(${positionX}px, ${positionY}px)`;
+
+  return (
+    <div key={audioFile.id} className="slider" style={{ transform }}>
+      <img src={audioFile.imgSrc} alt={audioFile.imgSrc} className="audiologo" />
+      <input
+        type="range"
+        min="0"
+        max="100"
+        value={volume}
+        onChange={(e) => handleSliderChange(audioFile.id, e.target.value)}
+        onInput={(e) => {
+          const value = Number(e.target.value) / 100;
+          e.target.style.setProperty('--thumb-rotate', `${value * 720}deg`);
+        }}
+        className="input-thumb"
+        style={sliderStyle} 
+      />
+      <br />
+      
+      <AudioPlayer
+        ref={playerRef} 
+        src={audioFile.src}
+        volume={volume / 100}
+        loop={true}
+        controls={false}
+      />
+    </div>
+  );
+};
+
 const AudioSliderApp = () => {
   useEffect(() => {
-    ReactGA.initialize('G-SQGQ56KHNZ'); // Your Google Analytics tracking ID
+    ReactGA.initialize('G-SQGQ56KHNZ'); 
     ReactGA.pageview(window.location.pathname + window.location.search);
   }, []);
+
   const [volumes, setVolumes] = useState({});
   const [audioFiles, setAudioFiles] = useState([
     { id: 1, volume: 0, src: rain, imgSrc: rainlogo, isPlaying: false },
@@ -47,7 +106,7 @@ const AudioSliderApp = () => {
   const handleSliderChange = (id, volume) => {
     setAudioFiles((prevAudioFiles) =>
       prevAudioFiles.map((audioFile) =>
-        audioFile.id === id ? { ...audioFile, volume, isPlaying: isStarted ? true : audioFile.isPlaying } : audioFile
+        audioFile.id === id ? { ...audioFile, volume, isPlaying: Number(volume) !== 0 } : audioFile
       )
     );
     setVolumes((prevVolumes) => ({
@@ -56,19 +115,12 @@ const AudioSliderApp = () => {
     }));
   };
 
-  const [sliderValue, setSliderValue] = useState(0);
   const [isStarted, setIsStarted] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 1200);
 
-const startAudio = () => {
+  const startAudio = () => {
     setIsStarted(true);
-    setAudioFiles(files => 
-      files.map(file => ({
-        ...file,
-        isPlaying: true,
-      }))
-    );
-};
+  };
 
 useEffect(() => {
   const handleResize = () => {
@@ -88,57 +140,17 @@ useEffect(() => {
       <div className={`circle ${isMobile ? 'mobile' : ''}`}>
       {!isStarted && <div className="sprite-button" onClick={startAudio}>
   </div>}
-  {isStarted && audioFiles.map((audioFile, index) => {
-  let positionX = 0;
-  let positionY = 0;
-
-  if (isMobile) {
-    // Stack sliders vertically in the mobile view
-    positionY = index * 100; // Change this as per your design
-  } else {
-    // Arrange sliders in a circle in the desktop view
-    const angle = (index * 360) / audioFiles.length;
-    if (index === 0 || index === 5 || index === 1) {
-      positionX = 200 * Math.cos((angle * Math.PI) / 180) + 250;
-      positionY = 150 * Math.sin((angle * Math.PI) / 180);
-    } else {
-      positionX = 200 * Math.cos((angle * Math.PI) / 180) - 250;
-      positionY = 150 * Math.sin((angle * Math.PI) / 180);
-    }
-  }
-
-  const transform = `translate(${positionX}px, ${positionY}px)`;
-            const volume = volumes[audioFile.id] || 0;
-          
-            return (
-              <div key={audioFile.id} className="slider" style={{ transform }}>
-                <img src={audioFile.imgSrc} alt={audioFile.imgSrc} className="audiologo" />
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={volume}
-                  onChange={(e) => handleSliderChange(audioFile.id, e.target.value)}
-                  onInput={(e) => {
-                    const value = Number(e.target.value) / 100;
-                    e.target.style.setProperty('--thumb-rotate', `${value * 720}deg`);
-                    setSliderValue(Math.round(value * 50));
-                  }}
-                  className="input-thumb"
-                  style={sliderStyle} 
-                />
-                <br />
-                
-                <AudioPlayer
-                  src={audioFile.src}
-                  volume={volume / 100}
-                  autoPlay={audioFile.isPlaying}
-                  loop={true}
-                  controls={false}
-                />
-              </div>
-            );
-          })}
+  {isStarted && audioFiles.map((audioFile, index) => (
+    <AudioSliderItem
+      key={audioFile.id}
+      audioFile={audioFile}
+      handleSliderChange={handleSliderChange}
+      volume={volumes[audioFile.id] || 0}
+      isMobile={isMobile}
+      index={index}
+      audioFilesLength={audioFiles.length}
+    />
+  ))}
         </div>
       </div>
     );
