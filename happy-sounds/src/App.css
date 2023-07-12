@@ -90,24 +90,18 @@ input[type="range"]:active::-webkit-slider-thumb {
   background-position: -201px 0;
 }
 
-
-/* When the screen size is less than 1200px */
-@media (max-width: 1199px) {
-  .circle {
-    /* Adjust your styling here for smaller screens */
-    /* If you want to align the sliders vertically, you might want to set display to flex and flex-direction to column */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .slider {
-    /* Adjust your styling here for smaller screens */
-    /* Remove transform and adjust position as needed */
-    transform: none;
-  }
+ @media (max-width: 1200px) {
+.container {
+  display: flex;
+  justify-content: center;
+  min-height: 200vh;
+  background-image: url('backgroundsmaller.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
+} 
 
 .jenn-logo {
   /* Set the size of your button */

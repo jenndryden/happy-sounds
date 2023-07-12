@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import logo from './logo.png';
+import logomobile from './logomobile.png';
 import name from './jenn.png';
 import rain from './rain.mp3';
 import brownnoise from './brownnoise.mp3';
@@ -52,32 +53,50 @@ const AudioSliderApp = () => {
 
   const [sliderValue, setSliderValue] = useState(0);
   const [isStarted, setIsStarted] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 1200);
 
 const startAudio = () => {
     setIsStarted(true);
 };
 
+useEffect(() => {
+  const handleResize = () => {
+    setIsMobile(window.innerWidth <= 1200);
+  };
+  window.addEventListener('resize', handleResize);
+  return () => {
+    window.removeEventListener('resize', handleResize);
+  };
+}, []);
+
 
   return (
     <div className="container">
-      <img src={logo} alt="Logo" className="logo" />
+      <img src={isMobile ? logomobile : logo} alt="Logo" className="logo" />
       <div className="jenn-logo" onClick={() => window.open("http://www.jenndryden.com", "_blank")}></div>
-      <div className="circle">
+      <div className={`circle ${isMobile ? 'mobile' : ''}`}>
       {!isStarted && <div className="sprite-button" onClick={startAudio}>
   </div>}
-        {isStarted && audioFiles.map((audioFile, index) => {
-          const angle = (index * 360) / audioFiles.length;
-          let positionX = 0;
-          let positionY = 0;
-          if (index === 0 || index === 5 || index === 1) {
-            positionX = 200 * Math.cos((angle * Math.PI) / 180) + 250;
-           positionY = 150 * Math.sin((angle * Math.PI) / 180);
-          }
-          else {
-            positionX = 200 * Math.cos((angle * Math.PI) / 180) -250;
-            positionY = 150 * Math.sin((angle * Math.PI) / 180);
-          }
-          const transform = `translate(${positionX}px, ${positionY}px)`;
+  {isStarted && audioFiles.map((audioFile, index) => {
+  let positionX = 0;
+  let positionY = 0;
+
+  if (isMobile) {
+    // Stack sliders vertically in the mobile view
+    positionY = index * 100; // Change this as per your design
+  } else {
+    // Arrange sliders in a circle in the desktop view
+    const angle = (index * 360) / audioFiles.length;
+    if (index === 0 || index === 5 || index === 1) {
+      positionX = 200 * Math.cos((angle * Math.PI) / 180) + 250;
+      positionY = 150 * Math.sin((angle * Math.PI) / 180);
+    } else {
+      positionX = 200 * Math.cos((angle * Math.PI) / 180) - 250;
+      positionY = 150 * Math.sin((angle * Math.PI) / 180);
+    }
+  }
+
+  const transform = `translate(${positionX}px, ${positionY}px)`;
             const volume = volumes[audioFile.id] || 0;
           
             return (
